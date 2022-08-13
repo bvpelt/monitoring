@@ -54,3 +54,151 @@ Client Version: v1.24.3
 Kustomize Version: v4.5.4
 Server Version: v1.23.3
 ```
+
+## Start minikube
+```shell
+minikube start
+```
+
+
+
+## Create configmap
+Create a configmap with following content and copy that to ~/Desktop/configmap.yaml
+
+```yaml
+apiVersion: v1
+data:
+  application.properties: message=Ninhao!!!!!!!
+kind: ConfigMap
+metadata:
+  name: edge
+```
+
+## Activate configmap
+
+```shell
+bvpelt@pluto:~/Desktop$ kubectl apply -f ~/Desktop/configmap.yaml 
+configmap/edge created
+```
+
+## Show configmap
+
+```shell
+bvpelt@pluto:~/Develop/monitoring/configuration$ kubectl get configmap
+NAME               DATA   AGE
+edge               1      3m32s
+kube-root-ca.crt   1      37m
+bvpelt@pluto:~/Develop/monitoring/configuration$ 
+
+bvpelt@pluto:~/Develop/monitoring/configuration$ kubectl get configmaps/edge -o json
+{
+    "apiVersion": "v1",
+    "data": {
+        "application.properties": "message=Ninhao!!!!!!!"
+    },
+    "kind": "ConfigMap",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"data\":{\"application.properties\":\"message=Ninhao!!!!!!!\"},\"kind\":\"ConfigMap\",\"metadata\":{\"annotations\":{},\"name\":\"edge\",\"namespace\":\"default\"}}\n"
+        },
+        "creationTimestamp": "2022-08-13T14:45:12Z",
+        "name": "edge",
+        "namespace": "default",
+        "resourceVersion": "2309",
+        "uid": "88c73b62-b0a1-4863-808b-01cdf734ed4c"
+    }
+}
+bvpelt@pluto:~/Develop/monitoring/configuration$ 
+```
+
+## Show minikube dashboard
+This opens a url in the browser which shows information on minikube
+- workloads
+- services
+- config and storage
+- cluster
+- settings
+```shell
+minikube dashboard
+```
+
+## Push image
+Push local build docker image to minikube
+```shell
+minikube image load docker.io/library/service:0.0.1-SNAPSHOT
+```
+
+## Use Deployment
+Use a previous pushed image in minikube
+```shell
+bvpelt@pluto:~/Develop/monitoring/service$ kubectl create deployment monitoring-service --image=docker.io/library/service:0.0.1-SNAPSHOT
+deployment.apps/monitoring-service created
+bvpelt@pluto:~/Develop/monitoring/service$
+
+bvpelt@pluto:~/Develop/monitoring/service$ kubectl get pods
+NAME                                  READY   STATUS    RESTARTS   AGE
+monitoring-service-66fdb65749-cx4ht   1/1     Running   0          5m4s
+bvpelt@pluto:~/Develop/monitoring/service$ 
+
+bvpelt@pluto:~/Develop/monitoring/service$ kubectl get deployment monitoring-service 
+NAME                 READY   UP-TO-DATE   AVAILABLE   AGE
+monitoring-service   1/1     1            1           4m15s
+bvpelt@pluto:~/Develop/monitoring/service$ 
+
+bvpelt@pluto:~/Develop/monitoring/service$ kubectl config view
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: /home/bvpelt/.minikube/ca.crt
+    extensions:
+    - extension:
+        last-update: Sat, 13 Aug 2022 18:54:02 CEST
+        provider: minikube.sigs.k8s.io
+        version: v1.26.1
+      name: cluster_info
+    server: https://192.168.49.2:8443
+  name: minikube
+- cluster:
+    certificate-authority: /home/bvpelt/.minikube/ca.crt
+    server: https://192.168.99.102:8443
+  name: mktutorial
+contexts:
+- context:
+    cluster: minikube
+    extensions:
+    - extension:
+        last-update: Sat, 13 Aug 2022 18:54:02 CEST
+        provider: minikube.sigs.k8s.io
+        version: v1.26.1
+      name: context_info
+    namespace: default
+    user: minikube
+  name: minikube
+- context:
+    cluster: mktutorial
+    user: mktutorial
+  name: mktutorial
+current-context: minikube
+kind: Config
+preferences: {}
+users:
+- name: minikube
+  user:
+    client-certificate: /home/bvpelt/.minikube/profiles/minikube/client.crt
+    client-key: /home/bvpelt/.minikube/profiles/minikube/client.key
+- name: mktutorial
+  user:
+    client-certificate: /home/bvpelt/.minikube/client.crt
+    client-key: /home/bvpelt/.minikube/client.key
+bvpelt@pluto:~/Develop/monitoring/service$ 
+
+bvpelt@pluto:~/Develop/monitoring/service$ kubectl expose deployment monitoring-service  --type=LoadBalancer --port=8080
+service/monitoring-service exposed
+bvpelt@pluto:~/Develop/monitoring/service$ 
+
+```
+
+## Stop minikube
+```shell
+minikube stop
+```

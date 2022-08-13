@@ -31,6 +31,6 @@ public class ConfigurationApplication {
     @Bean
     @ConditionalOnCloudPlatform(CloudPlatform.KUBERNETES)
     ApplicationListener<ApplicationReadyEvent>  readyEventApplicationListener() {
-        return args -> System.out.println("the application is running on k8s!");
+        return args -> System.out.println("the application is running on K8s!");
     }
 }
