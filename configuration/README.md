@@ -12,9 +12,13 @@ The Order of evaluation is (last value is used)
 - program argument
 
 An alternative are configmaps, these consist of directories with files (name is key, content is value)
+## References
+- [packet builder for java](https://paketo.io/docs/howto/java)
+
 
 ## Using kubernetes
 Requirement is installing minikube [see minikube installation](https://www.linuxbuzz.com/how-to-install-minikube-on-ubuntu/)
+and [minikube tutorial](https://kubernetes.io/docs/tutorials/hello-minikube/)
 
 ```shell
 bvpelt@pluto:~$ minikube start --driver=docker
