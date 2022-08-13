@@ -28,6 +28,12 @@ public class ServiceApplication {
     }
 
     @Bean
+    ApplicationListener<AvailabilityChangeEvent<?>> availabilityChangeEventApplicationListener() {
+
+        return event -> System.out.println(event.getResolvableType() + ": " + event.getState());
+    }
+
+    @Bean
     ApplicationListener<ApplicationReadyEvent> applicationReadyEventApplicationListener(CustomerRepository customerRepository) {
         return event -> Flux.just("Ype", "Albert", "Johan", "Jan", "Rik", "Hans")
                 .map(name -> new Customer(null, name))
@@ -50,10 +56,9 @@ class AvailabilityHttpConroller {
         AvailabilityChangeEvent.publish(this.context, LivenessState.BROKEN);
     }
 
-
     @GetMapping("/slow")
     void slow() throws Exception {
-		Thread.sleep(10_000);
+        Thread.sleep(10_000);
     }
 }
 
