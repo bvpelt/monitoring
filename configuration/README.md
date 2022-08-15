@@ -196,10 +196,13 @@ users:
     client-key: /home/bvpelt/.minikube/client.key
 bvpelt@pluto:~/Develop/monitoring/service$ 
 
-bvpelt@pluto:~/Develop/monitoring/service$ kubectl expose deployment monitoring-service  --type=LoadBalancer --port=8080
+vpelt@pluto:~$ kubectl expose deployment monitoring-service --type=NodePort --port=8080
 service/monitoring-service exposed
-bvpelt@pluto:~/Develop/monitoring/service$ 
-
+bvpelt@pluto:~$ kubectl get service
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes           ClusterIP   10.96.0.1       <none>        443/TCP          2d2h
+monitoring-service   NodePort    10.101.58.133   <none>        8080:31686/TCP   21s
+bvpelt@pluto:~$
 ```
 
 ## Stop minikube
