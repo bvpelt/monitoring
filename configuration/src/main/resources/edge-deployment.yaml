@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edge-deployment
+  labels:
+    app: edge
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: edge
+  template:
+    metadata:
+      labels:
+        app: edge
+    spec:
+      containers:
+        - name: edge
+          image: docker.io/library/edge:0.0.1-SNAPSHOT
+          ports:
+            - containerPort: 9999

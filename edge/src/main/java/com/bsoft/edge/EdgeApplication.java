@@ -2,6 +2,7 @@ package com.bsoft.edge;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -18,8 +19,13 @@ import reactor.core.publisher.Flux;
 @SpringBootApplication
 public class EdgeApplication {
 
+    @Value("${targetHostName}")
+    private String hostName;
+
     public static void main(String[] args) {
+
         SpringApplication.run(EdgeApplication.class, args);
+
     }
 
 
@@ -33,7 +39,7 @@ public class EdgeApplication {
                                 .addResponseHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
                                 .retry(10)
                         )
-                        .uri("http://localhost:8080"))
+                        .uri("http://" + hostName + ":8080"))
                 .build();
     }
 
@@ -46,6 +52,9 @@ public class EdgeApplication {
 @Controller
 @RequiredArgsConstructor
 class CustomerHttpController {
+    @Value("${targetHostName}")
+    private String hostName;
+
     private final WebClient http;
 
     @SchemaMapping(typeName = "Customer")
@@ -55,7 +64,7 @@ class CustomerHttpController {
 
     @QueryMapping
     Flux<Customer> customers() {
-        return this.http.get().uri("http://localhost:8080/customers")
+        return this.http.get().uri("http://" + hostName + ":8080/customers")
                 .retrieve()
                 .bodyToFlux(Customer.class);
     }
