@@ -19,3 +19,5 @@ spec:
           image: docker.io/library/edge:0.0.1-SNAPSHOT
           ports:
             - containerPort: 9999
+
+

@@ -20,6 +20,8 @@ An alternative are configmaps, these consist of directories with files (name is 
 Requirement is installing minikube [see minikube installation](https://www.linuxbuzz.com/how-to-install-minikube-on-ubuntu/)
 and [minikube tutorial](https://kubernetes.io/docs/tutorials/hello-minikube/)
 
+Kubernetes API is [here](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/)
+
 ```shell
 bvpelt@pluto:~$ minikube start --driver=docker
 😄  minikube v1.26.1 on Ubuntu 22.04
